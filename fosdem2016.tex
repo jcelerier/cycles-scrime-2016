@@ -3,6 +3,13 @@
 \usepackage{microtype}
 \usepackage{default}
 
+\usepackage[backend=biber]{biblatex}
+
+\addbibresource{scrime2016.bib}
+
+\usepackage[]{hyperref}
+\hypersetup{
+	colorlinks=true}
 \usetheme{simple}
 \usepackage{fontspec}
 \usepackage{graphicx}
@@ -21,9 +28,6 @@
 \newfontfamily\DejaSans{DejaVu Sans}
 \setbeamerfont{title}{family=\texttt,size=\huge}
 \usepackage[scale=2]{ccicons}
-\usepackage[backend=biber]{biblatex}
-
-\addbibresource{scrime2016.bib}
 \newfontfamily\unicodefun[Ligatures=TeX]{Symbola}
 
 \title{Évolutions audio dans i-score}
