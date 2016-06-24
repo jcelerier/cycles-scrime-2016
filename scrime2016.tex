@@ -1,17 +1,14 @@
 \documentclass{beamer}
+
+\usepackage{fontspec,xunicode,xltxtra}
 \usepackage[french]{babel}
 \usepackage{microtype}
-\usepackage{default}
-
-\usepackage[backend=biber]{biblatex}
-
-\addbibresource{scrime2016.bib}
+\usepackage{default}	
 
 \usepackage[]{hyperref}
 \hypersetup{
 	colorlinks=true}
 \usetheme{simple}
-\usepackage{fontspec}
 \usepackage{graphicx}
 \usepackage[utf8]{inputenc}
 \usepackage[justification=centering]{caption}
@@ -74,7 +71,7 @@
 	\end{itemize}    
 \end{frame}
 
-\section{Processus audio}
+\subsection{Processus audio}
 \begin{frame}	
 	\frametitle{Processus offerts}    
 	\Large
@@ -88,36 +85,125 @@
 \end{frame}
 
 \section{Audiographes}
+\subsection{Définitions}
 \begin{frame}
-	\frametitle{Audiographes}    
+	\frametitle{Audiographes...}    
 	\Large
 	\begin{itemize}
-		\item Problématique : pour qu'un effet soit calculé, le flux à l'origine de l'effet doit l'être aussi. 
+		\item On veut pouvoir réutiliser un même AudioStream à plusieurs endroits :  \\ $\rightarrow$ \textbf{Flowgraph} comme dans PureData, Max\dots
+		\item Pour qu'un effet fonctionne, le flux à l'origine de l'effet doit l'être aussi.~\\
+		La construction des AudioStream \textbf{impose un ordre}.
+		\item Graphe de dépendances + tri topologique $=$ création des flux dans l'ordre.
 	\end{itemize}    
 \end{frame}
 
-
-\section{Graphes d'effets temporels}
-
-\section{Hiérarchie}
-
-\section{Précision}
+\subsection{Audiographes dans i-score}
+\begin{frame}
+	\frametitle{... dans i-score}    
+	\Large
+	
+    On utilise comme unité de mixage la contrainte temporelle : 
+    chaque contrainte se mixe dans son processus parent.
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.6\textwidth]{images/mixage.png}
+		\caption{Les objets se mixent en suivant les flèches}
+	\end{figure}
+\end{frame}
 
 \begin{frame}
-	\frametitle{Précision à l'échantillon}
+	\frametitle{Graphe de mixage}    
+	\Large
+	\begin{columns}
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+				\centering
+				\includegraphics[width=\textwidth]{images/iscore1.eps}
+				\caption{Une contrainte munie de 5 processus dans i-score}
+			\end{figure}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+				\centering
+				\includegraphics[width=\textwidth]{images/graph1.eps}
+				\caption{La manière dont ces processus peuvent être traduits en graphe. 
+					Le dosage est donné dans le \textbf{Mix Process}.}
+			\end{figure}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\subsection{Graphes d'effets temporels}
+\begin{frame}
+	\frametitle{Audiographes}    
+	\Large
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.4\textwidth]{images/ex3.png}
+		\caption{Processus Send et Return pour partager un son entre plusieurs contraintes.}
+	\end{figure}
+\end{frame}
+
+\section{Précision}
+\begin{frame}
+	\frametitle{Précision : cas des séquences}
+	\Large
+	
+	\begin{columns}
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+				\centering
+				\includegraphics[width=\textwidth]{images/sequence.png}
+				\caption{Le second son démarrera un échantillon après le dernier échantillon du premier son.}
+			\end{figure}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+				\centering
+				\includegraphics[width=\textwidth]{images/triggers.png}
+				\caption{Lorsqu'un point d'interaction est déclenché, les nouvelles dates sont fixées jusqu'aux prochains points d'interaction}
+			\end{figure}
+		\end{column}
+	\end{columns}
 \end{frame}  
 
-%
-%\setbeamertemplate{frametitle}[default][center]
-%\begin{frame}
-%    \frametitle{Futuroscope, France : the Sprinter}        
-%
-%    \begin{figure}
-%        \centering
-%        %\includegraphics[width=0.9\textwidth]{images/futuroscope.jpg}
-%        \caption{Credits : Blue Yeti}
-%    \end{figure}
-%\end{frame}
+\begin{frame}
+	\frametitle{Précision : cas des boucles}
+	\Large
+	
+	\begin{columns}
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+				\centering
+				\includegraphics[width=0.62\textwidth]{images/loop.png}
+				\caption{Chaque tour de boucle démarre un échantillon après le son précédent.}
+			\end{figure}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+				\centering
+				\includegraphics[width=0.7\textwidth]{images/loop2.png}
+				\caption{Chaque tour de boucle démarre lors d'un déclenchement interactif.}
+			\end{figure}
+		\end{column}
+	\end{columns}
+\end{frame}  
+
+\section{Introspection et effets}
+\begin{frame}
+	\frametitle{Introspection et effets}    
+	\Large
+	\begin{itemize}
+		\item<1-> Actuellement : effets donnés en Faust.
+		\item<2-> Chaque effet possède une liste de paramètres.
+		\item<3-> Ces paramètres sont exposés dans l'arbre local d'i-score.
+		\item<4-> Utilisables dans les automations, mappings, JS\dots
+	\end{itemize}
+	
+	
+	
+\end{frame}
 
 \begin{frame}
 	\frametitle{Objectifs à venir} 
@@ -125,6 +211,8 @@
 	\begin{itemize}
 		\item<1> Enregistrement, entrée audio.
 		\item<2> Réutilisation en temps réel des enregistrements.
+		\item<3> Meilleure intégration MIDI (piano roll ?).
+		\item<4> Gestion des signatures temporelles.
 		
 	\end{itemize}
 \end{frame}    
@@ -149,5 +237,7 @@
 \end{frame}    
 
 \begin{frame}
-	\printbibliography 
+	\bibliographystyle{apalike}
+	\bibliography{scrime2016}
+\end{frame}
 \end{document}
